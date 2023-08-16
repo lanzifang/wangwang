@@ -1,12 +1,12 @@
 <template>
     <nav>
-      <router-link to="money" class="item">
+      <router-link to="/money" class="item" active-class="selected">
         <Icon name="money" />
         记账</router-link>
-      <router-link to="labels" class="item">
-        <Icon name="labels" />
+      <router-link to="/labels" class="item" active-class="selected">
+        <Icon name="label" />
         标签</router-link>
-      <router-link to="statistics" class="item">
+      <router-link to="/statistics" class="item" active-class="selected">
         <Icon name="statistics" />
         统计</router-link>
     </nav>
@@ -38,6 +38,8 @@
           height: 2.3em;
         }
       }
-     
+      >.item.selected{
+        color: red;
+      }
     }
 </style>

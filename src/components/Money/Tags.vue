@@ -1,7 +1,7 @@
 <template>
     <div class="tags">
         <div class="new">
-            <button>新增标签</button>
+            <button @click="create">新增标签</button>
         </div>
         <ul class="current">
             <li v-for="tag in dataSource" :key="tag"
@@ -27,6 +27,14 @@
                 this.selectedTags.push(tag)
             }
         }
+        create(){
+            const name=window.prompt('请输入标签名')
+            if(name===''){
+                window.alert('标签名不能为空')
+            }else if(this.dataSource){
+                this.$emit('update:dataSource',[...this.dataSource,name])
+            }
+        }
     }
 </script>
 
@@ -39,6 +47,7 @@
         flex-grow: 1;
         > .current{
             display: flex;
+            flex-wrap: wrap;
             > li{
                 background:#fec269;
                 $h:24px;
@@ -47,6 +56,8 @@
                 border-radius: $h/2;
                 padding: 0 16px;
                 margin-right: 12px;
+                margin-top: 8px;
+                
                 &.selected{
                     background:#ca8621;
                     color: white;

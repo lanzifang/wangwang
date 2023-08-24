@@ -3,7 +3,7 @@
         <NumberPad />
         <Types />
         <Notes />
-        <Tags :data-source="tags"/>
+        <Tags :data-source.sync="tags"/>
     </Layout>      
 </template>
 
@@ -17,7 +17,7 @@
         components:{NumberPad,Types,Notes,Tags},
         data(){
             return{
-                tags:['衣','食','住','行','麻将']
+                tags:['衣','食','住','行','麻将','羽毛球','工具','零食']
             }
         }
     }

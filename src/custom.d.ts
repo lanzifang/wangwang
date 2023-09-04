@@ -21,8 +21,12 @@ type TagListModel={
 declare global{
     interface Window{
         tagList:Tag[]
+        createTag:(name:string)=>void
     }
 }
 
 
 export default RecordItem
+export default Tag
+export default TagListModel
+

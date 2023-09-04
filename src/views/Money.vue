@@ -23,7 +23,6 @@
     import RecordItem from '@/custom'
 
     const recordList=recordListModel.fetch()
-    const tagList=tagListModel.fetch()
 
     @Component({
         components:{NumberPad,Types,FormItem,Tags}

@@ -10,7 +10,6 @@ type TagListModel={
     create:(name:string)=>'success'|'duplicated'
     save:()=>void
 }
-
 const tagListModel:TagListModel={
     data:[],
     fetch(){

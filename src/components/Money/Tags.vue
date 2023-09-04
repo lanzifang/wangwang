@@ -4,9 +4,9 @@
             <button @click="create">新增标签</button>
         </div>
         <ul class="current">
-            <li v-for="tag in dataSource" :key="tag"
+            <li v-for="tag in dataSource" :key="tag.id"
                 :class="{selected:selectedTags.indexOf(tag)>=0}"
-                @click="toggle(tag)">{{ tag }}</li>
+                @click="toggle(tag)">{{ tag.name }}</li>
         </ul>
     </div>
 </template>
@@ -14,10 +14,10 @@
 <script lang="ts">
     import Vue from 'vue'
     import { Component ,Prop} from 'vue-property-decorator';
-
+    
     @Component
     export default class Tags extends Vue{
-        @Prop() dataSource:string[]|undefined
+        @Prop() readonly dataSource:any //string[]|undefined，原来使用这个tag.id报错，但能运行
         selectedTags:string[]=[]
         toggle(tag:string){
             const index=this.selectedTags.indexOf(tag)
@@ -27,6 +27,7 @@
                 this.selectedTags.push(tag)
             }
             this.$emit('update:value',this.selectedTags)
+            
         }
         create(){
             const name=window.prompt('请输入标签名')

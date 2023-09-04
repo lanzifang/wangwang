@@ -1,4 +1,6 @@
 import RecordItem from '@/custom'
+import createId from '@/lib/createId'
+
 const localStorageKeyName='tagList'
 type Tag={
     id:string
@@ -23,7 +25,8 @@ const tagListModel:TagListModel={
         if(names.indexOf(name)>=0){
             return 'duplicated'
         }
-        this.data.push({id:name,name:name})
+        const id=createId().toString()
+        this.data.push({id,name:name})
         this.save()
         return 'success'
     },
@@ -54,11 +57,8 @@ const tagListModel:TagListModel={
                 break
             }    
         }
-        console.log('index')
-        console.log(index)
         this.data.splice(index,1)
         this.save()
-        console.log(this.data)
         return true
     }
 }

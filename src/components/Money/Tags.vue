@@ -19,9 +19,7 @@
     @Component({
         computed:{
             tagList(){
-                //todo
-                //return this.$store.fetchTags()
-                return []
+                return this.$store.state.tagList
             }
         }
     })
@@ -29,6 +27,9 @@
         
         //@Prop() readonly dataSource:any //string[]|undefined，原来使用这个tag.id报错，但能运行
         selectedTags:string[]=[]
+        created(){
+            this.$store.commit('fetchTags')
+        }
         toggle(tag:string){  //原来使用toggle(tag:string)报错，但能运行
             const index=this.selectedTags.indexOf(tag)
             if(index>=0){
@@ -44,8 +45,7 @@
             if(!name){
                 return window.alert('标签名不能为空')
             }
-            //todo
-            //store.createTag(name)   
+            this.$store.commit('createTag',name)  
         }
     }
 </script>

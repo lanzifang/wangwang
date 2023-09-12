@@ -2,7 +2,8 @@
   "compilerOptions": {
     "strictNullChecks": false,
     "noImplicitAny": false,
-    "target": "esnext",
+    "target": "ES5",
+    //"target": "esnext",
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
@@ -24,10 +25,11 @@
       ]
     },
     "lib": [
-      "esnext",
+      "es5",
+      "ES2015.Promise",
+      "ES2015",
+      "es2017",
       "dom",
-      "dom.iterable",
-      "scripthost"
     ]
   },
   "include": [

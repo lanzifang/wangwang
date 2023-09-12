@@ -18,14 +18,11 @@
     import { mixins } from 'vue-class-component';
     import TagHelper from '../../mixins/TagHelper';
     
-    @Component({
-        computed:{
-            tagList(){
-                return this.$store.state.tagList
-            }
-        }
-    })
+    @Component
     export default class Tags extends mixins(TagHelper){
+        get tagList(){
+            return this.$store.state.tagList
+        }
         
         //@Prop() readonly dataSource:any //string[]|undefined，原来使用这个tag.id报错，但能运行
         selectedTags:string[]=[]

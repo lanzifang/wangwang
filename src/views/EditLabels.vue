@@ -32,14 +32,10 @@
         }
         created(){
             const id=this.$route.params.id;
-            console.log(id)
             this.$store.commit('fetchTags')
             this.$store.commit('setCurrentTag',id)
             if(!this.tag){
-                console.log('no tag')
                 this.$router.replace('/404')
-            }else{
-                console.log('has tag')
             }
         }    
         update(name:string){

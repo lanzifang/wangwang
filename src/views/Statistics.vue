@@ -4,7 +4,7 @@
         <Tabs classPrefix="interval" :dataSource="intervalList" :value.sync="interval" />
         <ol>
             <li v-for="(group,index) in result" :key="index">
-                <h3 class="title">{{ group.title }}</h3>
+                <h3 class="title">{{ beautify(group.title) }}</h3>
                 <ol>
                     <li class="record" v-for="item in group.items" :key="item.id">
                         <span>{{ tagString(item.tags) }}</span>
@@ -41,6 +41,7 @@
     import { Component } from 'vue-property-decorator';
     import intervalList from '@/constants/intervalList'
     import recordTypeList from '@/constants/recordTypeList'
+    import dayjs from 'dayjs'
 
     @Component({
         components: { Tabs }
@@ -48,6 +49,21 @@
     export default class Statistics extends Vue{
         tagString(tags:string[]){
             return tags.length===0?'无':tags.join(',')
+        }
+        beautify(string:string){
+            const now=dayjs()
+            const api=dayjs(string)
+            if(api.isSame(now,'day')){
+                return '今天'
+            }else if(api.isSame(now.valueOf()-86400*1000,'day')){
+                return '昨天'
+            }else if(api.isSame(now.valueOf()-86400*1000*2,'day')){
+                return '前天'
+            }else if(api.isSame(now,'year')){
+                return api.format('M月D日')
+            }else{
+                return api.format('YYYY年MM月DD日')
+            }
         }
         get recordList(){
             return (this.$store.state as RootState).recordList

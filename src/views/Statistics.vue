@@ -2,23 +2,18 @@
     <Layout>
         <Tabs classPrefix="type" :dataSource="recordTypeList" :value.sync="type" />
         <Tabs classPrefix="interval" :dataSource="intervalList" :value.sync="interval" />
-        <div>
-            type:{{ type }}
-            <br />
-            interval:{{ interval }}
-        </div>
-        <div>
-            <ol>
-                <li v-for="(group,index) in result" :key="index">
-                    <h3>{{ group.title }}</h3>
-                    <ol>
-                        <li v-for="item in group.items" :key="item.id">
-                            {{ item.amount }} {{ item.createdAt }}
-                        </li>
-                    </ol>
-                </li>
-            </ol>
-        </div>
+        <ol>
+            <li v-for="(group,index) in result" :key="index">
+                <h3 class="title">{{ group.title }}</h3>
+                <ol>
+                    <li class="record" v-for="item in group.items" :key="item.id">
+                        <span>{{ tagString(item.tags) }}</span>
+                        <span class="notes">{{ item.notes }}</span>
+                        <span>￥{{ item.amount }} </span>
+                    </li>
+                </ol>
+            </li>
+        </ol>
     </Layout>  
 </template>
 
@@ -51,6 +46,9 @@
         components: { Tabs }
     })
     export default class Statistics extends Vue{
+        tagString(tags:string[]){
+            return tags.length===0?'无':tags.join(',')
+        }
         get recordList(){
             return (this.$store.state as RootState).recordList
         }
@@ -92,6 +90,24 @@
             height: 48px;
             background: #e6e6e6;
         }
+    } 
+    %item{
+        line-height: 24px;
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
     }
-    
+    .title{
+        @extend %item
+    }
+    .record{
+        background:#ffffff ;
+        @extend %item
+    }  
+    .notes{
+        margin-right: auto;
+        margin-left: 16px;
+        color: #999;
+    }
 </style>

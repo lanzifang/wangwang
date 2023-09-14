@@ -1,9 +1,11 @@
+
 type RecordItem={
     tags:string[]
     notes:string
     type:string
     amount:number
-    createdAt?:Date
+    createdAt?:string
+    id:string
 }
 type Tag={
     id:string
@@ -16,6 +18,6 @@ declare global{
 }
 
 
-export default RecordItem
+export default RecordItem 
 
 

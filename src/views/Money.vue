@@ -31,7 +31,7 @@
             return this.$store.state.recordList
         }
         record:RecordItem={
-            tags:[],notes:'',type:'-',amount:0
+            tags:[],notes:'',type:'-',amount:0,id:''
         }
         created(){
             this.$store.commit('fetchRecords')

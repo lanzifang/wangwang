@@ -1,14 +1,13 @@
 <template>
     <Layout>
         <Tabs classPrefix="type" :dataSource="recordTypeList" :value.sync="type" />
-        <Tabs classPrefix="interval" :dataSource="intervalList" :value.sync="interval" />
         <ol>
-            <li v-for="(group,index) in result" :key="index">
-                <h3 class="title">{{ beautify(group.title) }}</h3>
+            <li v-for="(group,index) in groupedList" :key="index">
+                <h3 class="title">{{ beautify(group.title) }}<span>￥{{ group.total }}</span></h3>
                 <ol>
-                    <li class="record" v-for="item in group.items" :key="item.id">
+                    <li class="record" v-for="item in group.items" :key="item.amount">
                         <span>{{ tagString(item.tags) }}</span>
-                        <span class="notes">{{ item.notes }}</span>
+                        <span class="note">{{ item.notes }}</span>
                         <span>￥{{ item.amount }} </span>
                     </li>
                 </ol>
@@ -24,24 +23,16 @@
         tagList:Tag[],
         currentTag?:Tag
     }
-    //RecordList要在该文件重新声明，不然总是报错，说找不到RecordList
-    type RecordList={
-        tags:string[]
-        notes:string
-        type:string
-        amount:number
-        createdAt?:string
-        id:string
-    }
+
     import Tag from '@/tag'
     import RecordItem from '@/custom'
 
     import Tabs from '@/components/Tabs.vue'
     import Vue from 'vue'
     import { Component } from 'vue-property-decorator';
-    import intervalList from '@/constants/intervalList'
     import recordTypeList from '@/constants/recordTypeList'
     import dayjs from 'dayjs'
+    import clone from '@/lib/clone'
 
     @Component({
         components: { Tabs }
@@ -68,24 +59,30 @@
         get recordList(){
             return (this.$store.state as RootState).recordList
         }
-        get result(){
+        get groupedList(){
             const {recordList}=this
-            type HashTableValue={title:string,items:RecordList[]}
-            const hashTable:{[key:string]:HashTableValue}={}
-            for(let i=0;i<recordList.length;i++){
-                const [date,time]=recordList[i].createdAt!.split('T')
-                console.log(date)
-                hashTable[date]=hashTable[date]||{title:date,items:[]}
-                hashTable[date].items.push(recordList[i])
+            if(recordList.length===0){return []}
+            const newList=clone(recordList).filter(r=>r.type===this.type).sort((a,b)=>dayjs(b.createdAt).valueOf()-dayjs(a.createdAt).valueOf())
+            type Result={title:string,total?:number,items:RecordItem[]}[]
+            const result:Result=[{title:dayjs(newList[0].createdAt).format('YYYY-MM-DD'),items:[newList[0]]}]
+            for(let i=1;i<newList.length;i++){
+                const current=newList[i]
+                const last=result[result.length-1]
+                if(dayjs(last.title).isSame(dayjs(current.createdAt),'day')){
+                    last.items.push(current)
+                }else{
+                    result.push({title:dayjs(current.createdAt).format('YYYY-MM-DD'),items:[current]})
+                }
             }
-            return hashTable
+            result.map(group=>{
+                group.total=group.items.reduce((sum,item)=>sum+item.amount,0)
+            })
+            return result
         }
         beforeCreate(){
             this.$store.commit('fetchRecords')
         }
         type='-'
-        interval='day'
-        intervalList=intervalList
         recordTypeList=recordTypeList
     }
 </script>
@@ -121,7 +118,7 @@
         background:#ffffff ;
         @extend %item
     }  
-    .notes{
+    .note{
         margin-right: auto;
         margin-left: 16px;
         color: #999;

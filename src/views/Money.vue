@@ -1,13 +1,13 @@
 <template> 
     <Layout class-prefix="layout"> 
-        <Tags />
+        <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
+        <Tabs :dataSource="recordTypeList" :value.sync="record.type" />
         <div class="notes">
             <FormItem fieldName="备注" 
                placeholder="请输入备注..."
                @update:value="onUpdateNotes" />
         </div>
-        <Tabs :dataSource="recordTypeList" :value.sync="record.type" />
-        <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
+        <Tags />
     </Layout>      
 </template>
 
@@ -48,7 +48,7 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .layout-content{
         display: flex;
         flex-direction: column-reverse;

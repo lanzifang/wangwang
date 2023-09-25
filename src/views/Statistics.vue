@@ -1,11 +1,11 @@
 <template>
     <Layout>
         <Tabs classPrefix="type" :dataSource="recordTypeList" :value.sync="type" />
-        <ol>
+        <ol v-if="groupedList.length>0">
             <li v-for="(group,index) in groupedList" :key="index">
                 <h3 class="title">{{ beautify(group.title) }}<span>￥{{ group.total }}</span></h3>
                 <ol>
-                    <li class="record" v-for="item in group.items" :key="item.amount">
+                    <li class="record" v-for="(item,index) in group.items" :key="index">{{ item.id }}
                         <span>{{ tagString(item.tags) }}</span>
                         <span class="note">{{ item.notes }}</span>
                         <span>￥{{ item.amount }} </span>
@@ -13,6 +13,9 @@
                 </ol>
             </li>
         </ol>
+        <div v-else class="noResult">
+            当前无记录
+        </div>
     </Layout>  
 </template>
 
@@ -23,6 +26,7 @@
         tagList:Tag[],
         currentTag?:Tag
     }
+   
 
     import Tag from '@/tag'
     import RecordItem from '@/custom'
@@ -38,8 +42,8 @@
         components: { Tabs }
     })
     export default class Statistics extends Vue{
-        tagString(tags:string[]){
-            return tags.length===0?'无':tags.join(',')
+        tagString(tags:Tag[]){
+            return tags.length===0?'无':tags.map(t=>t.name).join(',')
         }
         beautify(string:string){
             const now=dayjs()
@@ -88,6 +92,10 @@
 </script>
 
 <style scoped lang="scss">
+    .noResult{
+        padding: 16px;
+        text-align: center;
+    }
     ::v-deep {
         .type-tabs-item{
             background: #e6e6e6;

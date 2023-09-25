@@ -11,9 +11,11 @@ type RootState={
   recordList:RecordItem[],
   tagList:Tag[],
   currentTag?:Tag
+  createTagError:Error|null
 }
 const store= new Vuex.Store({
   state: {
+    createTagError:null,
     recordList:[],
     tagList:[],
     currentTag:undefined
@@ -21,12 +23,19 @@ const store= new Vuex.Store({
   mutations:{
     fetchRecords(state){
       state.recordList=JSON.parse(window.localStorage.getItem('recordList')||'[]') as RecordItem[]
+      if(!state.tagList||state.tagList.length===0){
+        store.commit('createTag','衣')
+        store.commit('createTag','食')
+        store.commit('createTag','住')
+        store.commit('createTag','行')
+      }
     },
-    createRecord(state,record){
-      const record2:RecordItem=clone(record)
+    createRecord(state,record:RecordItem){
+      const record2=clone(record)
       record2.createdAt=new Date().toISOString()
       state.recordList.push(record2)
       store.commit('saveRecords')
+      window.alert('已保存')
     },
     saveRecords(state){
       window.localStorage.setItem('recordList',JSON.stringify(state.recordList))
@@ -35,14 +44,15 @@ const store= new Vuex.Store({
       state.tagList = JSON.parse(window.localStorage.getItem('tagList')||'[]') as Tag[];
     },
     createTag(state,name: string) {
+      state.createTagError=null
       const names = state.tagList.map(item => item.name);
       if (names.indexOf(name) >= 0) {
-        window.alert('标签名重复了');
+        state.createTagError=new Error('tag name duplicated')
+        return
       }
       const id = createId().toString();
       state.tagList.push({id, name: name});
       store.commit('saveTags');
-      window.alert('添加成功');
     },
     saveTags(state) {
       window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
